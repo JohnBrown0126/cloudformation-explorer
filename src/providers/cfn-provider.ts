@@ -22,7 +22,7 @@ export class CloudFormationProvider implements vscode.TreeDataProvider<TreeItem>
             return Promise.resolve([]);
         }
 
-        const files = await vscode.workspace.findFiles('**/*.yaml');
+        const files = await vscode.workspace.findFiles('**/*.yaml', '**/*.(?!yaml)');
         
         // Filter CloudFormation templates by checking the first line
         const cloudFormationFiles = [];
@@ -50,7 +50,7 @@ function checkAWSTemplateFormatVersion(filePath: string): Promise<boolean> {
         rl.once('line', (line) => {
             const trimmedLine = line.trim();
 
-            const isValidFirstLine = trimmedLine.includes('AWSTemplateFormatVersion')
+            const isValidFirstLine = trimmedLine.includes('AWSTemplateFormatVersion');
             
             rl.close();
             resolve(isValidFirstLine);
