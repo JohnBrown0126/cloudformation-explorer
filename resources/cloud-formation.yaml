@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  MetricsNamespace:
+    Type: String
+    Default: Upside/GatewayCloud
+  DeviceStateTableName:
+    Type: String
+    Description: The name of the device state
+  
+Resources:
+  CustomAuthoriserSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub /security/${AWS::StackName}/ocpp-custom-authoriser-secret
+      Description: Private and RSA signing key for the custom authoriser
+
+  CustomAuthoriser:
+    Type: AWS::IoT::Authorizer
+    Properties:
+      AuthorizerFunctionArn: !GetAtt CustomAuthoriserLambda.Arn
+      Status: ACTIVE
+      TokenKeyName: X-Header
+      TokenSigningPublicKeys: 
+        SigningVal: |
+          -----BEGIN PUBLIC KEY-----
+          PubKey
+          -----END PUBLIC KEY-----
+
+  CustomAuthoriserLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDeviceStateTable
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:Query
+                Resource:
+                  - !Sub
+                    - 'arn:aws:dynamodb:eu-west-1:${AWS::AccountId}:table/${DeviceStateTable}'
+                    - DeviceStateTable: !Ref DeviceStateTableName
+                  - !Sub
+                    - 'arn:aws:dynamodb:eu-west-1:${AWS::AccountId}:table/${DeviceStateTable}/index/*'
+                    - DeviceStateTable: !Ref DeviceStateTableName
+
+  CustomAuthoriserLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref CustomAuthoriserLambda
+      Action: lambda:InvokeFunction
+      Principal: iot.amazonaws.com
+
+  CustomAuthoriserLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      AutoPublishAlias: live
+      CodeUri: build/
+      Handler: bundle.handle
+      Runtime: nodejs20.x
+      Tracing: Active
+      MemorySize: 512
+      Timeout: 10
+      Role: !GetAtt CustomAuthoriserLambdaRole.Arn
+      Architectures:
+        - arm64
+      Environment:
+        Variables:
+          METRICS_SERVICE_NAME: CustomAuthoriserLambda
+          METRICS_NAMESPACE: !Ref MetricsNamespace
+          DEVICE_STATE_TABLE: !Ref DeviceStateTableName
+
+Outputs:
+  CustomAuthoriserSecretArn:
+    Description: |
+      Secret ARN for the IoT Authoriser
+    Value: !Ref CustomAuthoriserSecret
+    Export:
+      Name: !Sub "${AWS::StackName}-CustomAuthoriserSecret"
