@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+
+### region: us-east-1
+  MyBucketUSEast:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-test-bucket-us-east-1
+### endregion
+
+### region: eu-west-1
+  MyBucketEUWest:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-test-bucket-eu-west-1
+  MyQueueEUWest:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: my-test-queue-eu-west-1
+### endregion
+
+  MyGlobalTable:
+    Type: AWS::DynamoDB::GlobalTable
+    Properties:
+      TableName: my-global-table
