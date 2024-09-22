@@ -17,22 +17,27 @@ export class AnalysisProvider implements vscode.TreeDataProvider<AnalysisItem> {
         this._onDidChangeTreeData.fire();
     }
 
-    setFile(filePath: string): void {
-        fs.promises.readFile(filePath, 'utf8').then((content) => {
+    async setFile(filePath: string): Promise<void> {
+        try {
+            const content = await fs.promises.readFile(filePath, 'utf8');
             const data = yaml.load(content, { schema: CLOUDFORMATION_SCHEMA });
             if (data) {
                 const yaml = data as CloudFormationYaml;
                 this.tree = createTreeFromCloudFormation(filePath, content, yaml);
                 this.refresh();
             }
-        });
+        }
+        catch (error) {
+            console.error('Error reading file:', error);
+            throw error; // Optionally re-throw if you want to propagate the error
+        }
     }
 
     getTreeItem(element: AnalysisItem): vscode.TreeItem {
-        if(element.children.length == 0) {
+        if (element.children.length === 0) {
             return new vscode.TreeItem(element.label, vscode.TreeItemCollapsibleState.None);
         }
-        
+
         return new vscode.TreeItem(element.label, vscode.TreeItemCollapsibleState.Expanded);
     }
 
@@ -45,7 +50,7 @@ export class AnalysisProvider implements vscode.TreeDataProvider<AnalysisItem> {
     }
 }
 
-class AnalysisItem extends vscode.TreeItem {
+export class AnalysisItem extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         public readonly line: number,
