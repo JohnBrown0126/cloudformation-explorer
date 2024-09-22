@@ -24,6 +24,9 @@ By using the following comment style you can group areas together (similar to C#
 ### endregion
 
 ```
+
+![Demo of My VSCode Extension](resources/assets/demo.gif)
+
 See the explorer in action!
 ![Explorer View](resources/assets/explorer.png)
 
