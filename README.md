@@ -16,7 +16,11 @@ By using the following comment style you can group areas together (similar to C#
 ### endregion
 
 ```
+See the explorer in action!
+![Explorer View](resources/assets/explorer.png)
 
+See how resources can be grouped together easily
+![Analyser View](resources/assets/analyser.png)
 
 ## Known Issues
 
