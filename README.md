@@ -1,7 +1,15 @@
 # Cloudformation Explorer README
-This extension aims to make your Cloudformation development easier by allowing ease-of-navigation. It also allows you to 'group' areas of your code via a name.
+Simplify your AWS CloudFormation workflow with an easy-to-use resource explorer. Quickly view and navigate your resources grouped by comment regions, making it effortless to understand your cloud infrastructure at a glance.
 
-## Features
+
+## Key Features
+📂 Automatically group CloudFormation resources into collapsible regions
+🔍 Improve template readability and navigation
+🚀 Quickly fold and unfold sections of your template
+🧭 Clear overview of your template structure
+💡 Streamlined CloudFormation development experience
+
+
 ### Cloudformation Navigation
 As long as your file begins with `AWSTemplateFormatVersion` it will be included in the explorer
 
@@ -25,10 +33,18 @@ See how resources can be grouped together easily
 ## Known Issues
 
 Working on VSCode engine support as we speak!
+Adding support for JSON template declarations
 
 ## Release Notes
+### 0.0.4
+Expanding documentation
 
-### 1.0.0
+### 0.0.3
+Better readme
 
+### 0.0.2
+Extra tests
+
+### 0.0.1
 Initial release of cloudformation explorer.
 
