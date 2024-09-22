@@ -7,6 +7,7 @@ import { CloudFormationProvider } from './providers/cfn-provider';
 
 export async function activate(context: vscode.ExtensionContext) {
     const workspaceDirectory = vscode.workspace.workspaceFolders;
+    
     if (workspaceDirectory === undefined || workspaceDirectory.length === 0) {
         vscode.window.createTreeView('cloudformation-explorer', {
             treeDataProvider: new ErrorProvider('No workspace folders are open')

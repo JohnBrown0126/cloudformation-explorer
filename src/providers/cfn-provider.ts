@@ -68,7 +68,7 @@ function checkAWSTemplateFormatVersion(filePath: string): Promise<boolean> {
 
 
 // TreeItem class for CloudFormation files
-class TreeItem extends vscode.TreeItem {
+export class TreeItem extends vscode.TreeItem {
     constructor(
         public readonly label: string,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
