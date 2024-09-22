@@ -4,12 +4,27 @@
   "displayName": "cloudformation explorer",
   "repository": "https://github.com/JohnBrown0126/cloudformation-explorer",
   "description": "Visualise a cloudformation file with an explorer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.93.0",
     "node": "=20",
     "npm": "=10"
   },
+  "keywords": [
+    "cloudformation",
+    "cloud formation",
+    "code-regions",
+    "code-folding",
+    "template-organization",
+    "aws",
+    "infrastructure-as-code",
+    "template-structure",
+    "code-navigation",
+    "yaml",
+    "json",
+    "cloud-computing",
+    "devops"
+  ],
   "categories": [
     "Other"
   ],
