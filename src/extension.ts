@@ -30,7 +30,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     analysisView.onDidChangeSelection((e) => {
         if (e.selection.length > 0) {
-            gotoLine( e.selection[0].filePath,  e.selection[0].line);
+            gotoLine(e.selection[0].filePath, e.selection[0].line);
         }
 
     });
